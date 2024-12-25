@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNmute - Main Menu</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header>
+        <img src="static/unmute_logo.png" alt="UNmute Logo" class="logo">
+    </header>
+
+    <h1>Welcome to <span style="color: red;">UNmute</span></h1>
+
+    <div class="main-menu">
+        <button onclick="selectVoice('male')">Male Voice</button>
+        <button onclick="selectVoice('female')">Female Voice</button>
+    </div>
+
+    <div class="options">
+        <a href="build_a_sentence.html" class="menu-button">Build a Sentence</a>
+        <a href="make_a_custom_word.html" class="menu-button">Make a Custom Word</a>
+    </div>
+
+    <footer>
+        <input type="text" id="main-text-box" placeholder="Write something..." />
+        <button onclick="speakText()">Speak</button>
+    </footer>
+
+    <script>
+        function selectVoice(voice) {
+            localStorage.setItem("selectedVoice", voice);
+            alert(`${voice.charAt(0).toUpperCase() + voice.slice(1)} voice selected!`);
+        }
+
+        function speakText() {
+            const text = document.getElementById("main-text-box").value;
+            if (!text.trim()) {
+                alert("Please enter some text!");
+                return;
+            }
+
+            fetch("/speak", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    text: text,
+                    voice: localStorage.getItem("selectedVoice") || "male"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    alert("Error speaking text!");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while processing the text.");
+            });
+        }
+    </script>
+</body>
+</html>
