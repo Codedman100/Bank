@@ -10,11 +10,21 @@
     <header>
         <img src="{{ url_for('static', filename='unmute_logo.png') }}" alt="UNmute Logo" class="logo">
     </header>
-
     <h1>UN<span style="color: red;">mute</span></h1>
-    <div class="text-box-container">
-        <textarea id="text-box" placeholder="Type your message here..." class="styled-text-box"></textarea>
-        <button id="speak-button" class="styled-button">Speak</button>
+    <div class="main-container">
+        <div>
+            <input id="text-input" class="text-box" placeholder="Enter text to speak">
+            <select id="voice-selector">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+            <button id="speak-text-btn">Speak Text</button>
+        </div>
+        <div class="menu-options">
+            <a href="/build-a-sentence" class="menu-btn">Build a Sentence</a>
+            <a href="/make-a-custom-word" class="menu-btn">Make a Custom Word</a>
+        </div>
     </div>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
