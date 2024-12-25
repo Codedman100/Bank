@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build a Sentence</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <img src="/static/unmute_logo.png" alt="UNmute Logo" class="logo" onclick="goToHome()">
+    </header>
+
+    <h1>Build a Sentence</h1>
+
+    <!-- Sentence Box -->
+    <div>
+        <input id="sentence-box" placeholder="Your sentence here" readonly>
+        <button id="complete-btn">Speak Sentence</button>
+    </div>
+
+    <!-- Categories -->
+    <div id="categories"></div>
+
+    <!-- Back to Home -->
+    <a href="/"><button>Back to Home</button></a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const sentenceBox = document.getElementById("sentence-box");
+            const categories = {{ categories | tojson }};
+            const selectedVoice = localStorage.getItem("selectedVoice") || "male";
+
+            function renderCategories() {
+                const container = document.getElementById("categories");
+                container.innerHTML = "";
+
+                for (const [category, words] of Object.entries(categories)) {
+                    const section = document.createElement("div");
+                    section.innerHTML = `<h2>${category}</h2>`;
+
+                    words.forEach(word => {
+                        const btn = document.createElement("button");
+                        btn.textContent = word;
+                        btn.onclick = () => sentenceBox.value += word + " ";
+                        section.appendChild(btn);
+                    });
+                    container.appendChild(section);
+                }
+            }
+
+            document.getElementById("complete-btn").onclick = () => {
+                const sentence = sentenceBox.value.trim();
+                if (!sentence) {
+                    alert("Please build a sentence first!");
+                    return;
+                }
+
+                fetch("/build-a-sentence", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ sentence, voice: selectedVoice })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        alert("Error: " + data.error);
+                    } else {
+                        alert(data.message);
+                        sentenceBox.value = ""; // Clear the box
+                    }
+                })
+                .catch(err => {
+                    alert("Error occurred: " + err.message);
+                });
+            };
+
+            renderCategories();
+        });
+
+        function goToHome() {
+            window.location.href = "/";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Make a Custom Word</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Make a Custom Word</h2>
+    <form id="custom-word-form">
+        <input id="word-name" placeholder="Word Name (e.g., Hello)" required>
+        <input id="word-says" placeholder="Word Says (e.g., Hi)" required>
+        <button type="submit" class="tts-btn">Add Custom Word</button>
+    </form>
+    <a href="/"><button>Back to Home</button></a>
+
+    <script>
+        document.getElementById("custom-word-form").onsubmit = (e) => {
+            e.preventDefault();
+            const name = document.getElementById("word-name").value;
+            const says = document.getElementById("word-says").value;
+
+            const customWords = JSON.parse(localStorage.getItem("customWords")) || [];
+            customWords.push({ name, says });
+            localStorage.setItem("customWords", JSON.stringify(customWords));
+
+            alert(`Custom word "${name}" added!`);
+            document.getElementById("custom-word-form").reset();
+        };
+    </script>
+</body>
+</html>

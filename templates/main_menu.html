@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNmute - Main Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='unmute_logo.png') }}" alt="UNmute Logo" class="logo">
+    </header>
+
+    <h1>UN<span style="color: red;">mute</span></h1>
+    <div class="text-box-container">
+        <textarea id="text-box" placeholder="Type your message here..." class="styled-text-box"></textarea>
+        <button id="speak-button" class="styled-button">Speak</button>
+    </div>
+</body>
+</html>
