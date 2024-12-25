@@ -28,3 +28,35 @@
     <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const speakButton = document.getElementById("speak-text-btn");
+        const textBox = document.getElementById("text-input");
+        const voiceSelector = document.getElementById("voice-selector");
+
+        speakButton.onclick = () => {
+            const text = textBox.value.trim();
+            const voice = voiceSelector.value;
+
+            if (!text) {
+                alert("Please enter some text to speak!");
+                return;
+            }
+
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: text, voice: voice })
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.error) {
+                    alert(`Error: ${data.error}`);
+                } else {
+                    alert("Text spoken successfully!");
+                }
+            })
+            .catch((error) => alert(`Error: ${error.message}`));
+        };
+    });
+</script>
